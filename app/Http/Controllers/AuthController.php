@@ -22,6 +22,32 @@ class AuthController extends Controller
      * @bodyParam  password string required Password
      * @bodyParam password_confirmation string required Confirmation password
      */
+     /**
+      * @OA\Get(
+      *      path="/api/auth/register",
+      *      operationId="register",
+      *      tags={"Authentication"},
+      *      summary="Register a new user",
+      *      description="",
+      *      @OA\Parameter(
+      *          name="id",
+      *          description="Project id",
+      *          required=true,
+      *          in="path",
+      *          @OA\Schema(
+      *              type="integer"
+      *          )
+      *      ),
+      *      @OA\Response(
+      *          response=200,
+      *          description="successful operation"
+      *       ),
+      *       @OA\Response(response=400, description="Bad request"),
+      *       security={
+      *           {"api_key_security_example": {}}
+      *       }
+      *     )
+      */
     public function register(Request $request)
     {
         // Validate input data
