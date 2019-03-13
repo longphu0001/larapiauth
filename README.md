@@ -1,7 +1,21 @@
 # larapiauth
-An authentication API boilerplate can be used for starting any new app.
+An authentication API boilerplate built from Laravel that can be used for starting any new app.
 
-# installing
+# Package versions
+- Laravel 5.8.3
+- L5-Swagger 5.8.x
+- Passport 7.2
+
+# Features
+- Register
+- Activate user (after registration)
+- Login
+- Logout
+- Get user
+- Reset password (forgot password)
+- Change password
+
+# Installing
 - Run "composer install"
 - Run "npm install"
 - Create a new database
@@ -12,7 +26,7 @@ An authentication API boilerplate can be used for starting any new app.
 - Run "php artisan key:generate" to generate application key
 - Run "sudo chmod -R 777 storage" (on mac or linux) or "chmod -R 777 storage" (on windows) to grant permission for the app to access/modify storage folder
 
-#testing
+# Testing
 - Run "php artisan l5-swagger:generate" to generate API documentations
 - Run "php artisan serve" to start the serve
 - Go to localhost:8000/api/documentation to access the api list
