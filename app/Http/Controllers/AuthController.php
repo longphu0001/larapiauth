@@ -20,7 +20,7 @@ class AuthController extends Controller
     *         path="/api/auth/register",
     *         tags={"Authentication"},
     *         summary="Register",
-    *         description="Register a new user",
+    *         description="Register a new user and send notification mail",
     *         operationId="register",
     *         @OA\Response(
     *             response=200,
@@ -184,8 +184,25 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout
-     */
+    * @OA\Get(
+    *         path="/api/auth/logout",
+    *         tags={"Authentication"},
+    *         summary="Logout",
+    *         description="Logout an user",
+    *         operationId="logout",
+    *         security={
+    *           {"bearerAuth": {}}
+    *         },
+    *         @OA\Response(
+    *             response=200,
+    *             description="Successful operation"
+    *         ),
+    *         @OA\Response(
+    *             response=500,
+    *             description="Server error"
+    *         ),
+    * )
+    */
     public function logout(Request $request)
     {
         $request->user()->token()->revoke();
@@ -194,16 +211,60 @@ class AuthController extends Controller
     }
 
     /**
-     * Get user
-     */
+    * @OA\Get(
+    *         path="/api/auth/getUser",
+    *         tags={"Authentication"},
+    *         summary="Get user",
+    *         description="Retrieve information from current user",
+    *         operationId="getUser",
+    *         security={
+    *           {"bearerAuth": {}}
+    *         },
+    *         @OA\Response(
+    *             response=200,
+    *             description="Successful operation"
+    *         ),
+    *         @OA\Response(
+    *             response=500,
+    *             description="Server error"
+    *         ),
+    * )
+    */
     public function getUser(Request $request)
     {
         return response()->json(['success' => AppResponse::STATUS_SUCCESS, 'data' => $request->user()], AppResponse::HTTP_OK);
     }
 
     /**
-     * Activate user
-     */
+    * @OA\Get(
+    *         path="/api/auth/register/activate/{token}",
+    *         tags={"Authentication"},
+    *         summary="Activate user",
+    *         description="Activate an registered user",
+    *         operationId="activateUser",
+    *         @OA\Parameter(
+    *             name="token",
+    *             in="path",
+    *             description="User activating token (should be included in the verification mail)",
+    *             required=true,
+    *             @OA\Schema(
+    *                 type="string",
+    *             )
+    *         ),
+    *         @OA\Response(
+    *             response=200,
+    *             description="Successful operation"
+    *         ),
+    *         @OA\Response(
+    *             response=400,
+    *             description="Invalid token"
+    *         ),
+    *         @OA\Response(
+    *             response=500,
+    *             description="Server error"
+    *         ),
+    * )
+    */
     public function activate($token)
     {
         $user = User::where('activation_token', $token)->first();
@@ -221,9 +282,44 @@ class AuthController extends Controller
     }
 
     /**
-     * Create password reset token
-     * @bodyParam email string required Email
-     */
+    * @OA\Post(
+    *         path="/api/auth/password/token/create",
+    *         tags={"Authentication"},
+    *         summary="Request resetting password",
+    *         description="Generate password reset token and send that token to user through mail",
+    *         operationId="createPasswordResetToken",
+    *         @OA\Response(
+    *             response=200,
+    *             description="Successful operation"
+    *         ),
+    *         @OA\Response(
+    *             response=400,
+    *             description="Email not existing"
+    *         ),
+    *         @OA\Response(
+    *             response=422,
+    *             description="Invalid input"
+    *         ),
+    *         @OA\Response(
+    *             response=500,
+    *             description="Server error"
+    *         ),
+    *         @OA\RequestBody(
+    *             required=true,
+    *             @OA\MediaType(
+    *                 mediaType="application/x-www-form-urlencoded",
+    *                 @OA\Schema(
+    *                     type="object",
+    *                     @OA\Property(
+    *                         property="email",
+    *                         description="Email",
+    *                         type="string",
+    *                     ),
+    *                 )
+    *             )
+    *         )
+    * )
+    */
     public function createPasswordResetToken(Request $request)
     {
         // Validate input data
@@ -255,8 +351,35 @@ class AuthController extends Controller
     }
 
     /**
-     * Find password reset token
-     */
+    * @OA\Get(
+    *         path="/api/auth/password/token/find/{token}",
+    *         tags={"Authentication"},
+    *         summary="Verify reset password token",
+    *         description="Verify the reset password token and make sure it is existing and still valid",
+    *         operationId="findPasswordResetToken",
+    *         @OA\Parameter(
+    *             name="token",
+    *             in="path",
+    *             description="Password reset token (should be included in the notification mail)",
+    *             required=true,
+    *             @OA\Schema(
+    *                 type="string",
+    *             )
+    *         ),
+    *         @OA\Response(
+    *             response=200,
+    *             description="Successful operation"
+    *         ),
+    *         @OA\Response(
+    *             response=400,
+    *             description="Invalid token"
+    *         ),
+    *         @OA\Response(
+    *             response=500,
+    *             description="Server error"
+    *         ),
+    * )
+    */
     public function findPasswordResetToken($token)
     {
         // Make sure the password reset token is findable, otherwise throw error
@@ -273,13 +396,60 @@ class AuthController extends Controller
         return response()->json(['success' => AppResponse::STATUS_SUCCESS, 'data' => $passwordReset], AppResponse::HTTP_OK);
     }
 
-     /**
-     * Reset password
-     * @bodyParam email string required Email
-     * @bodyParam password string required Password
-     * @bodyParam password_confirmation string required Confirmation password
-     * @bodyParam token string required Token
-     */
+    /**
+    * @OA\Post(
+    *         path="/api/auth/password/reset",
+    *         tags={"Authentication"},
+    *         summary="Reset password",
+    *         description="Set new password for the user",
+    *         operationId="resetPassword",
+    *         @OA\Response(
+    *             response=200,
+    *             description="Successful operation"
+    *         ),
+    *         @OA\Response(
+    *             response=400,
+    *             description="Password reset token invalid or email not existing"
+    *         ),
+    *         @OA\Response(
+    *             response=422,
+    *             description="Invalid input"
+    *         ),
+    *         @OA\Response(
+    *             response=500,
+    *             description="Server error"
+    *         ),
+    *         @OA\RequestBody(
+    *             required=true,
+    *             @OA\MediaType(
+    *                 mediaType="application/x-www-form-urlencoded",
+    *                 @OA\Schema(
+    *                     type="object",
+    *                     @OA\Property(
+    *                         property="email",
+    *                         description="Email",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="password",
+    *                         description="Password",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="password_confirmation",
+    *                         description="Confirm password",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="token",
+    *                         description="Password reset token",
+    *                         type="string",
+    *                     ),
+    *                 )
+    *             )
+    *         )
+    * )
+    */
     public function resetPassword(Request $request)
     {
         // Validate input data
@@ -321,7 +491,7 @@ class AuthController extends Controller
     *         path="/api/auth/password/change",
     *         tags={"Authentication"},
     *         summary="Change password",
-    *         description="Change an user's password (requires current password)",
+    *         description="Change an user's password (requires current password) and send notification mail",
     *         operationId="changePassword",
     *         security={
     *           {"bearerAuth": {}}
