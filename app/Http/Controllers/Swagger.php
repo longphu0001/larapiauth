@@ -6,6 +6,7 @@
  *      title=APP_NAME
  * )
  */
+
 /**
  *  @OA\Server(
  *      url=L5_SWAGGER_CONST_HOST_1,
@@ -17,3 +18,14 @@
  *      description="Dev server"
  * )
  */
+
+/**
+* @OA\SecurityScheme(
+*      securityScheme="bearerAuth",
+*      in="header",
+*      name="bearerAuth",
+*      type="http",
+*      scheme="bearer",
+*      bearerFormat="JWT",
+* ),
+*/

@@ -16,38 +16,55 @@ use Validator;
 class AuthController extends Controller
 {
     /**
-     * Register
-     * @bodyParam  name string required Name
-     * @bodyParam  email string required Email
-     * @bodyParam  password string required Password
-     * @bodyParam password_confirmation string required Confirmation password
-     */
-     /**
-      * @OA\Get(
-      *      path="/api/auth/register",
-      *      operationId="register",
-      *      tags={"Authentication"},
-      *      summary="Register a new user",
-      *      description="",
-      *      @OA\Parameter(
-      *          name="id",
-      *          description="Project id",
-      *          required=true,
-      *          in="path",
-      *          @OA\Schema(
-      *              type="integer"
-      *          )
-      *      ),
-      *      @OA\Response(
-      *          response=200,
-      *          description="successful operation"
-      *       ),
-      *       @OA\Response(response=400, description="Bad request"),
-      *       security={
-      *           {"api_key_security_example": {}}
-      *       }
-      *     )
-      */
+    * @OA\Post(
+    *         path="/api/auth/register",
+    *         tags={"Authentication"},
+    *         summary="Register",
+    *         description="Register a new user",
+    *         operationId="register",
+    *         @OA\Response(
+    *             response=200,
+    *             description="Successful operation"
+    *         ),
+    *         @OA\Response(
+    *             response=422,
+    *             description="Invalid input or email taken"
+    *         ),
+    *         @OA\Response(
+    *             response=500,
+    *             description="Server error"
+    *         ),
+    *         @OA\RequestBody(
+    *             required=true,
+    *             @OA\MediaType(
+    *                 mediaType="application/x-www-form-urlencoded",
+    *                 @OA\Schema(
+    *                     type="object",
+    *                      @OA\Property(
+    *                         property="name",
+    *                         description="User's name",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="email",
+    *                         description="Email",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="password",
+    *                         description="Password",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="password_confirmation",
+    *                         description="Confirm password",
+    *                         type="string",
+    *                     )
+    *                 )
+    *             )
+    *         )
+    * )
+    */
     public function register(Request $request)
     {
         // Validate input data
@@ -76,18 +93,61 @@ class AuthController extends Controller
     }
 
     /**
-     * Login
-     * @bodyParam email string required Email
-     * @bodyParam password string required Password
-     * @bodyParam remember_me boolean Remember me
-     */
+    * @OA\Post(
+    *         path="/api/auth/login",
+    *         tags={"Authentication"},
+    *         summary="Login",
+    *         description="Login an user",
+    *         operationId="login",
+    *         @OA\Response(
+    *             response=200,
+    *             description="Successful operation"
+    *         ),
+    *         @OA\Response(
+    *             response=422,
+    *             description="Invalid input"
+    *         ),
+    *         @OA\Response(
+    *             response=403,
+    *             description="Wrong combination of email and password or email not verified"
+    *         ),
+    *         @OA\Response(
+    *             response=500,
+    *             description="Server error"
+    *         ),
+    *         @OA\RequestBody(
+    *             required=true,
+    *             @OA\MediaType(
+    *                 mediaType="application/x-www-form-urlencoded",
+    *                 @OA\Schema(
+    *                     type="object",
+    *                      @OA\Property(
+    *                         property="email",
+    *                         description="Email",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="password",
+    *                         description="Password",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="remember_me",
+    *                         description="Remember me",
+    *                         type="boolean",
+    *                     )
+    *                 )
+    *             )
+    *         )
+    * )
+    */
     public function login(Request $request)
     {
         // Validate input data
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
             'password' => 'required|string',
-            'remember_me' => 'boolean'
+            // 'remember_me' => 'boolean'
         ]);
         if ($validator->fails()) {
             return response()->json(['success' => AppResponse::STATUS_FAILURE, 'errors'=>$validator->errors()], AppResponse::HTTP_UNPROCESSABLE_ENTITY);
@@ -256,6 +316,58 @@ class AuthController extends Controller
         return response()->json(['success' => AppResponse::STATUS_SUCCESS, 'data' => $user], AppResponse::HTTP_OK);
     }
 
+    /**
+    * @OA\Post(
+    *         path="/api/auth/password/change",
+    *         tags={"Authentication"},
+    *         summary="Change password",
+    *         description="Change an user's password (requires current password)",
+    *         operationId="changePassword",
+    *         security={
+    *           {"bearerAuth": {}}
+    *         },
+    *         @OA\Response(
+    *             response=200,
+    *             description="Successful operation"
+    *         ),
+    *         @OA\Response(
+    *             response=422,
+    *             description="Invalid input"
+    *         ),
+    *         @OA\Response(
+    *             response=403,
+    *             description="Wrong combination of email and password or email not verified"
+    *         ),
+    *         @OA\Response(
+    *             response=500,
+    *             description="Server error"
+    *         ),
+    *         @OA\RequestBody(
+    *             required=true,
+    *             @OA\MediaType(
+    *                 mediaType="application/x-www-form-urlencoded",
+    *                 @OA\Schema(
+    *                     type="object",
+    *                      @OA\Property(
+    *                         property="password",
+    *                         description="Password",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="new_password",
+    *                         description="New password",
+    *                         type="string",
+    *                     ),
+    *                     @OA\Property(
+    *                         property="new_password_confirmation",
+    *                         description="Confirm new password",
+    *                         type="string",
+    *                     ),
+    *                 )
+    *             )
+    *         )
+    * )
+    */
     public function changePassword(Request $request)
     {
         $user = $request->user();
