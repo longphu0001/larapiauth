@@ -11,7 +11,7 @@ import Loading from './components/Loading'
 import Select2 from './components/Select'
 import App from './App'
 import router from './router'
-// import store from './store'
+import store from './store'
 
 Vue.use(BootstrapVue)
 Vue.use(Notifications)
@@ -46,7 +46,7 @@ Vue.component('b-datepicker', {
 export default new Vue({
   el        : '#app',
   router    : router,
-  // store     : store,
+  store     : store,
   components: { App },
   template  : '<App/>',
 })

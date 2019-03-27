@@ -13,6 +13,62 @@ import Page500 from '@/views/pages/Page500'
 import Login from '@/views/pages/Login'
 import Register from '@/views/pages/Register'
 
+import store from '../store/index.js';
+
+/*
+This will check to see if the user is authenticated or not.
+*/
+function requireAuth (to, from, next) {
+    /*
+    Determines where we should send the user.
+    */
+    function proceed () {
+        /*
+        If the user has been loaded determine where we should
+        send the user.
+        */
+        if ( store.get('user/loadStatus') == 2 ){
+            /*
+            If the user is not empty, that means there's a user
+            authenticated we allow them to continue. Otherwise, we
+            send the user back to the home page.
+            */
+            if ( store.get('user/get') != '' ){
+                next();
+            } else {
+                next('/login');
+            }
+        } else {
+            next('/login');
+        }
+    }
+
+    /*
+    Confirms the user has been loaded
+    */
+    if ( store.get('user/loadStatus') != 2 ){
+        /*
+        If not, load the user
+        */
+        store.dispatch('user/getUser');
+
+        /*
+        Watch for the user to be loaded. When it's finished, then
+        we proceed.
+        */
+        store.watch( store.get('user/loadStatus'), function(){
+            if( store.get('user/loadStatus') == 2 ){
+                proceed();
+            }
+        });
+    } else {
+        /*
+        User call completed, so we proceed
+        */
+        proceed()
+    }
+}
+
 // Sample route
 import sample from './sample'
 
@@ -33,9 +89,30 @@ export default new Router({
           path     : 'dashboard',
           name     : 'Dashboard',
           component: Dashboard,
+          beforeEnter: requireAuth
         },
         ...sample,
       ],
+    },
+    {
+      path     : '/404',
+      name     : 'Page404',
+      component: Page404,
+    },
+    {
+      path     : '/500',
+      name     : 'Page500',
+      component: Page500,
+    },
+    {
+      path     : '/login',
+      name     : 'Login',
+      component: Login,
+    },
+    {
+      path     : '/register',
+      name     : 'Register',
+      component: Register,
     },
     {
       path     : '/pages',
@@ -45,22 +122,18 @@ export default new Router({
       children : [
         {
           path     : '404',
-          name     : 'Page404',
           component: Page404,
         },
         {
           path     : '500',
-          name     : 'Page500',
           component: Page500,
         },
         {
           path     : 'login',
-          name     : 'Login',
           component: Login,
         },
         {
           path     : 'register',
-          name     : 'Register',
           component: Register,
         },
       ],

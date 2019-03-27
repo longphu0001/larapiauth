@@ -16,15 +16,15 @@
                 <b-input-group class="mb-3">
                   <b-input-group-prepend>
                     <b-input-group-text>
-                      <i class="icon-user" />
+                      <i class="icon-envelope-open" />
                     </b-input-group-text>
                   </b-input-group-prepend>
                   <b-input
-                    v-model="form.username"
-                    :state="$v.form.username | state"
+                    v-model="form.email"
+                    :state="$v.form.email | state"
                     type="text"
                     class="form-control"
-                    placeholder="Username"
+                    placeholder="Email"
                   />
                   <b-form-invalid-feedback>
                     Required
@@ -104,7 +104,7 @@ export default {
   data () {
     return {
       form: {
-        username: '',
+        email: '',
         password: '',
       },
     }
@@ -112,14 +112,18 @@ export default {
   validations () {
     return {
       form: {
-        username: { required },
+        email: { required },
         password: { required },
       },
     }
   },
   methods: {
     submit () {
+      // Validation
       this.$v.$touch()
+      if(this.$v.form.$error) return
+
+
     },
   },
 }

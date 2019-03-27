@@ -51,6 +51,9 @@ export default {
       return this.$route.matched
     },
   },
+  created () {
+      this.$store.dispatch('user/getUser')
+  },
   mounted () {
     $('body').addClass('app sidebar-lg-show pace-done')
     $(window).on('scroll', this.setPosNotify)
