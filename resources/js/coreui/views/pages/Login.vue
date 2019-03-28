@@ -26,6 +26,7 @@
                 type="text"
                 class="form-control"
                 placeholder="Email"
+                v-on:keyup.enter="submit"
                 />
                 <div class="invalid-feedback d-block" v-if="$v.form.email.$invalid && validation.errors && validation.errors.email">
                   {{ validation.errors.email[0] }}
@@ -43,6 +44,7 @@
                 type="password"
                 class="form-control"
                 placeholder="Password"
+                v-on:keyup.enter="submit"
                 />
                 <div class="invalid-feedback d-block" v-if="$v.form.password.$invalid && validation.errors.password">
                   {{ validation.errors.password[0] }}
@@ -68,6 +70,9 @@
               >
               Forgot password?
             </b-button>
+            <button type="button" class="btn px-0 btn-link" @click="goToHome()">
+              Back to Home
+            </button>
           </b-col>
         </b-row>
       </b-card-body>
@@ -84,6 +89,7 @@
         <b-button
         variant="primary"
         class="active mt-3"
+        @click="$router.push({ name: 'Register' })"
         >
         Register Now!
       </b-button>
@@ -104,7 +110,9 @@ import AuthAPI from '../../api/auth.js'
 export default {
   name: 'Login',
   created () {
-    this.$store.dispatch('user/getUser')
+    if (window.localStorage.getItem('access_token')){
+      this.$store.dispatch('user/getUser')
+    }
   },
   data () {
     return {
@@ -126,19 +134,10 @@ export default {
       },
     }
   },
-  // watch: {
-  //     user: function (newValue, oldValue) {
-  //         if ( newValue ) {
-  //             this.$router.push({ name: "Dashboard" })
-  //         }
-  //     }
-  // },
-  // computed:{
-  //     user(){
-  //       return this.$store.get('user/get');
-  //     },
-  // },
   methods: {
+    goToHome() {
+      window.location.href = "/"
+    },
     submit () {
       // Validation
       this.$v.$touch()

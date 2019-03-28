@@ -65,6 +65,13 @@
               >
                 Create Account
               </b-button>
+              <p class="text-center mb-1 mt-1">OR</p>
+              <button type="button" class="btn btn-primary btn-block" @click="$router.push({ name: 'Login' })">
+                  Login
+              </button>
+              <button type="button" class="btn px-0 btn-link float-right mt-2" @click="goToHome()">
+                Back to Home
+              </button>
             </b-card-body>
             <b-card-footer class="p-4">
               <b-row>
@@ -95,5 +102,11 @@
 </template>
 
 <script>
-export default { name: 'Register' }
+export default {
+  methods: {
+    goToHome() {
+      window.location.href = "/"
+    },
+  }
+}
 </script>
