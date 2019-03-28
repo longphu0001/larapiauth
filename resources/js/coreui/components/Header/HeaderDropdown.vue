@@ -68,7 +68,7 @@
     <b-dropdown-item>
       <i class="fa fa-shield" /> Lock Account
     </b-dropdown-item>
-    <b-dropdown-item>
+    <b-dropdown-item @click="logout()">
       <i class="fa fa-lock" /> Logout
     </b-dropdown-item>
   </b-nav-item-dropdown>
@@ -78,6 +78,12 @@ export default {
   name: 'HeaderDropdown',
   data: () => {
     return { itemsCount: 42 }
+  },
+  methods: {
+    logout () {
+      window.localStorage.removeItem("access_token");
+      window.location.href = "/"
+    },
   },
 }
 

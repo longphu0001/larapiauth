@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Exception;
+use App\Http\AppResponse;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -47,5 +49,29 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         return parent::render($request, $exception);
+    }
+
+    /**
+
+     * Convert an authentication exception into an unauthenticated response.
+
+     *
+
+     * @param  \Illuminate\Http\Request  $request
+
+     * @param  \Illuminate\Auth\AuthenticationException  $exception
+
+     * @return \Illuminate\Http\Response
+
+     */
+
+    protected function unauthenticated($request, AuthenticationException $exception)
+    {
+        if ($request->expectsJson()) {
+        	$response = ['success' => AppResponse::STATUS_FAILURE,'message' => 'Invalid access token'];
+        	return response()->json($response, AppResponse::HTTP_UNAUTHORIZED);
+        }
+
+        return redirect()->guest('login');
     }
 }

@@ -14,59 +14,31 @@ import Login from '@/views/pages/Login'
 import Register from '@/views/pages/Register'
 
 import store from '../store/index.js';
+import router from '../router';
 
 /*
 This will check to see if the user is authenticated or not.
 */
 function requireAuth (to, from, next) {
-    /*
-    Determines where we should send the user.
-    */
-    function proceed () {
-        /*
-        If the user has been loaded determine where we should
-        send the user.
-        */
-        if ( store.get('user/loadStatus') == 2 ){
-            /*
-            If the user is not empty, that means there's a user
-            authenticated we allow them to continue. Otherwise, we
-            send the user back to the home page.
-            */
-            if ( store.get('user/get') != '' ){
-                next();
-            } else {
-                next('/login');
-            }
-        } else {
-            next('/login');
-        }
-    }
+  if (window.localStorage.getItem('access_token')){
+    // Verify the stored access token
+    store.dispatch('user/getUser')
+    store.watch(store.getters['user/getUser'], n => {
+      if( store.get('user/loadStatus') == 2 ){
+        next()
+      }
+    })
+  } else {
+    next('/login')
+  }
+}
 
-    /*
-    Confirms the user has been loaded
-    */
-    if ( store.get('user/loadStatus') != 2 ){
-        /*
-        If not, load the user
-        */
-        store.dispatch('user/getUser');
-
-        /*
-        Watch for the user to be loaded. When it's finished, then
-        we proceed.
-        */
-        store.watch( store.get('user/loadStatus'), function(){
-            if( store.get('user/loadStatus') == 2 ){
-                proceed();
-            }
-        });
-    } else {
-        /*
-        User call completed, so we proceed
-        */
-        proceed()
-    }
+function requireNonAuth (to, from, next) {
+  if ( !window.localStorage.getItem('access_token') ){
+    next()
+  } else {
+    router.go(-1)
+  }
 }
 
 // Sample route
@@ -108,11 +80,13 @@ export default new Router({
       path     : '/login',
       name     : 'Login',
       component: Login,
+      beforeEnter: requireNonAuth
     },
     {
       path     : '/register',
       name     : 'Register',
       component: Register,
+      beforeEnter: requireNonAuth
     },
     {
       path     : '/pages',
