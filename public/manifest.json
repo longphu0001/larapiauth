@@ -1,0 +1,21 @@
+{
+  "short_name": "LCV",
+  "name": "Laravel CoreUI Vue",
+  "icons": [
+    {
+      "src": "/images/logo-symbol.png",
+      "type": "image/png",
+      "sizes": "720x202"
+    },
+    {
+      "src": "/images/logo-symbol.png",
+      "type": "image/png",
+      "sizes": "100x100"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#36A2CD",
+  "theme_color": "#36A2CD",
+  "display": "standalone",
+  "orientation": "portrait"
+}

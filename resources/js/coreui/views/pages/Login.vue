@@ -2,7 +2,8 @@
   <div class="app flex-row align-items-center">
     <div class="container">
       <b-row class="justify-content-center">
-        <b-col md="8">
+        <!-- <b-col md="8"> -->
+        <b-col md="4">
           <b-card-group>
             <b-card
             no-body
@@ -77,7 +78,7 @@
         </b-row>
       </b-card-body>
     </b-card>
-    <b-card
+    <!-- <b-card
     no-body
     class="text-white bg-primary py-5 d-md-down-none"
     style="width:44%"
@@ -95,7 +96,7 @@
       </b-button>
     </div>
   </b-card-body>
-</b-card>
+</b-card> -->
 </b-card-group>
 </b-col>
 </b-row>

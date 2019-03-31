@@ -52,27 +52,27 @@ mix.vueOptions({
  },
 })
 
-mix.extract([
- 'axios',
- 'bootstrap',
- 'bootstrap-vue',
- 'chart.js',
- 'jquery',
- 'lodash',
- 'moment',
- 'popper.js',
- 'select2',
- 'vue',
- 'vue-chartjs',
- 'vue-loading-spinner',
- 'vue-notification',
- 'vue-router',
- 'vue-sweetalert2',
- 'vuejs-datepicker',
- 'vuelidate',
- 'vuex',
- 'vuex-easy-access',
-])
+// mix.extract([
+//  'axios',
+//  'bootstrap',
+//  'bootstrap-vue',
+//  'chart.js',
+//  'jquery',
+//  'lodash',
+//  'moment',
+//  'popper.js',
+//  'select2',
+//  'vue',
+//  'vue-chartjs',
+//  'vue-loading-spinner',
+//  'vue-notification',
+//  'vue-router',
+//  'vue-sweetalert2',
+//  'vuejs-datepicker',
+//  'vuelidate',
+//  'vuex',
+//  'vuex-easy-access',
+// ])
 
 if (mix.inProduction())
   mix.version()
