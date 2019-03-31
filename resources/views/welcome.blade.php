@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="links">
-                    <a href="{{ url('/api/documentation') }}">API Documentation</a>
+                    <a href="{{ url('/api/documentation') }}">API DOCUMENTATION</a> | <a href="{{ url('/dashboard') }}">ADMIN PANEL</a>
                 </div>
             </div>
         </div>
