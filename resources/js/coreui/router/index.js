@@ -12,6 +12,7 @@ import Page404 from '@/views/pages/Page404'
 import Page500 from '@/views/pages/Page500'
 import Login from '@/views/pages/Login'
 import Register from '@/views/pages/Register'
+import ForgotPassword from '@/views/pages/ForgotPassword'
 
 import store from '../store/index.js';
 import router from '../router';
@@ -86,6 +87,12 @@ export default new Router({
       path     : '/register',
       name     : 'Register',
       component: Register,
+      beforeEnter: requireNonAuth
+    },
+    {
+      path     : '/forgot-password',
+      name     : 'ForgotPassword',
+      component: ForgotPassword,
       beforeEnter: requireNonAuth
     },
     {

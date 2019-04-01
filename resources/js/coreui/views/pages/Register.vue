@@ -11,7 +11,7 @@
             class="mx-4"
           >
             <b-card-body class="p-4">
-              <h1>Register</h1>
+              <h2>Register</h2>
               <p class="text-muted">
                 Create your account
               </p>

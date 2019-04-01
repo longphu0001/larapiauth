@@ -10,7 +10,7 @@
             class="p-4"
             >
             <b-card-body>
-              <h1>Login</h1>
+              <h2>Login</h2>
               <p class="text-muted">
                 Sign In to your account
               </p>
@@ -68,6 +68,7 @@
               <b-button
               variant="link"
               class="px-0"
+              @click="$router.push({ name: 'ForgotPassword' })"
               >
               Forgot password?
             </b-button>
@@ -162,7 +163,7 @@ export default {
           vueComponent.$router.push({ name: "Dashboard" })
         } else {
           // Show message error
-          vueComponent.validation.message = message
+          vueComponent.validation.message = response.data.message
         }
       })
       .catch(error => {
