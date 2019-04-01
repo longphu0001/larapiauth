@@ -24,7 +24,7 @@ function requireAuth (to, from, next) {
     // Verify the stored access token
     store.dispatch('user/getUser')
     store.watch(store.getters['user/getUser'], n => {
-      if( store.get('user/loadStatus') == 2 ){
+      if( store.get('user/userLoadStatus') == 2 ){
         next()
       }
     })

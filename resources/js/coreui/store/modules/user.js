@@ -3,9 +3,9 @@ import { APP_CONFIG } from '../../../config.js'
 import UserAPI from '../../api/user.js'
 
 const state = {
-  get: {},
-  loadStatus: 0,
-  updateStatus: 0
+  user: {},
+  userLoadStatus: 0,
+  userUpdateStatus: 0
 }
 
 // add generate mutation vuex easy access
@@ -13,27 +13,27 @@ const state = {
 const mutations = { ...defaultMutations(state) }
 
 const getters = {
-  getUser: state => () => state.get
+  getUser: state => () => state.user
 }
 
 const actions = {
   getUser ({ commit }) {
-    commit('loadStatus', 1)
+    commit('userLoadStatus', 1)
 
     UserAPI.getUser()
     .then((response) => {
-      commit('loadStatus', 2)
-      commit('get', response.data.data)
+      commit('userLoadStatus', 2)
+      commit('user', response.data.data)
     })
     .catch( function( e ) {
       if (e.request && e.request.status && e.request.status == 401) {
         // Load done
-        commit('loadStatus', 2)
+        commit('userLoadStatus', 2)
       } else {
         // Load failed
-        commit('loadStatus', 3)
+        commit('userLoadStatus', 3)
       }
-      commit('get', {})
+      commit('user', {})
     })
 
     const instance = axios.create({

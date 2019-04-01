@@ -4,11 +4,7 @@
     no-caret
   >
     <template slot="button-content">
-      <img
-        src="~static/img/avatars/6.jpg"
-        class="img-avatar"
-        alt="admin@bootstrapmaster.com"
-      >
+      <button type="button" class="btn btn-light">{{ user.email }}</button>
     </template>
     <b-dropdown-header
       tag="div"
@@ -25,7 +21,13 @@
 export default {
   name: 'HeaderDropdown',
   data: () => {
-    return { itemsCount: 42 }
+    return {
+       itemsCount: 42,
+       user: null
+     }
+  },
+  created () {
+      this.user = this.$store.get('user/user')
   },
   methods: {
     logout () {
