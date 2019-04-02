@@ -40,11 +40,6 @@ class AuthController extends Controller
     *                 mediaType="application/x-www-form-urlencoded",
     *                 @OA\Schema(
     *                     type="object",
-    *                      @OA\Property(
-    *                         property="name",
-    *                         description="User's name",
-    *                         type="string",
-    *                     ),
     *                     @OA\Property(
     *                         property="email",
     *                         description="Email",
@@ -69,7 +64,6 @@ class AuthController extends Controller
     {
         // Validate input data
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|confirmed'
         ]);
@@ -79,7 +73,6 @@ class AuthController extends Controller
 
         // Create user
         $user = new User([
-            'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'activation_token' => str_random(60)

@@ -13,7 +13,7 @@
               <p class="text-muted">
                 Request to reset password
               </p>
-              <div v-bind:class="{'alert alert-success': this.successRequest, 'alert alert-danger': !this.successRequest}" id="message" v-if="this.validation.message" role="alert">{{ this.validation.message }}</div>
+              <div v-bind:class="{'alert alert-success': (this.request.status == 2), 'alert alert-danger': !(this.request.status == 2)}" id="message" v-if="this.validation.message" role="alert">{{ this.validation.message }}</div>
               <b-input-group class="mb-3">
                 <b-input-group-prepend>
                   <b-input-group-text>
@@ -34,7 +34,9 @@
               </b-input-group>
               <b-row>
                 <b-col cols="6">
+                  <loading-stretch v-if="request.status==1"></loading-stretch>
                   <b-button
+                  v-else
                   variant="primary"
                   class="px-4"
                   @click="submit"
@@ -68,11 +70,15 @@
 </template>
 
 <script>
+import LoadingStretch from 'vue-loading-spinner/src/components/Stretch.vue'
 import { required, email } from 'validators'
 import AuthAPI from '../../api/auth.js'
 
 export default {
   name: 'ForgotPassword',
+  components: {
+    LoadingStretch
+  },
   data () {
     return {
       form: {
@@ -80,9 +86,11 @@ export default {
       },
       validation: {
         message: '',
-        successRequest: false,
         errors: {}
-      }
+      },
+      request: {
+        status: 0
+      },
     }
   },
   validations () {
@@ -108,22 +116,25 @@ export default {
       // Reset validation
       this.validation.message = ''
       this.validation.errors = {}
+      // Mark request status as loading
+      this.request.status = 1
       // Get the access token
       AuthAPI.createPasswordResetToken(email)
       .then(response => {
-        debugger
         if (response.data && response.data.success) {
-          vueComponent.successRequest = true
           vueComponent.validation.message = response.data.message
+          // Mark request status as loaded succesully
+          vueComponent.request.status = 2
         } else {
+          // Mark request status as failed to load
+          vueComponent.request.status = 3
           // Show message error
           vueComponent.validation.message = response.data.message
-          vueComponent.successRequest = false
         }
       })
       .catch(error => {
-        debugger
-        vueComponent.successRequest = false
+        // Mark request status as failed to load
+        vueComponent.request.status = 3
         if (error.response && error.response.data) {
           vueComponent.validation.message = error.response.data.message
           vueComponent.validation.errors = error.response.data.errors

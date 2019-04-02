@@ -53,7 +53,9 @@
               </b-input-group>
               <b-row>
                 <b-col cols="6">
+                  <loading-stretch v-if="request.status==1"></loading-stretch>
                   <b-button
+                  v-else
                   variant="primary"
                   class="px-4"
                   @click="submit"
@@ -70,7 +72,7 @@
               class="px-0"
               @click="$router.push({ name: 'ForgotPassword' })"
               >
-              Forgot password?
+              Forgot password
             </b-button>
             <button type="button" class="btn px-0 btn-link" @click="goToHome()">
               Back to Home
@@ -79,25 +81,6 @@
         </b-row>
       </b-card-body>
     </b-card>
-    <!-- <b-card
-    no-body
-    class="text-white bg-primary py-5 d-md-down-none"
-    style="width:44%"
-    >
-    <b-card-body class="text-center">
-      <div>
-        <h2>Sign up</h2>
-        <p>If you don't have an account yet, you can register one here.</p>
-        <b-button
-        variant="primary"
-        class="active mt-3"
-        @click="$router.push({ name: 'Register' })"
-        >
-        Register Now!
-      </b-button>
-    </div>
-  </b-card-body>
-</b-card> -->
 </b-card-group>
 </b-col>
 </b-row>
@@ -106,11 +89,15 @@
 </template>
 
 <script>
+import LoadingStretch from 'vue-loading-spinner/src/components/Stretch.vue'
 import { required, email } from 'validators'
 import AuthAPI from '../../api/auth.js'
 
 export default {
   name: 'Login',
+  components: {
+    LoadingStretch
+  },
   created () {
     if (window.localStorage.getItem('access_token')){
       this.$store.dispatch('user/getUser')
@@ -125,7 +112,10 @@ export default {
       validation: {
         message: '',
         errors: {}
-      }
+      },
+      request: {
+        status: 0
+      },
     }
   },
   validations () {
@@ -153,6 +143,8 @@ export default {
       // Reset validation
       this.validation.message = '';
       this.validation.errors = {};
+      // Mark request status as loading
+      this.request.status = 1
       // Get the access token
       AuthAPI.getAccessToken(email, password)
       .then(response => {
@@ -161,12 +153,18 @@ export default {
           window.localStorage.setItem('access_token', response.data.data.access_token);
           // Move to dashboard
           vueComponent.$router.push({ name: "Dashboard" })
+          // Mark request status as loaded succesully
+          vueComponent.request.status = 2
         } else {
+          // Mark request status as failed to load
+          vueComponent.request.status = 3
           // Show message error
           vueComponent.validation.message = response.data.message
         }
       })
       .catch(error => {
+        // Mark request status as failed to load
+        vueComponent.request.status = 3
         if (error.response && error.response.data) {
           vueComponent.validation.message = error.response.data.message
           vueComponent.validation.errors = error.response.data.errors

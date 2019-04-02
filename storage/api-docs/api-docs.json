@@ -29,10 +29,6 @@
                         "application/x-www-form-urlencoded": {
                             "schema": {
                                 "properties": {
-                                    "name": {
-                                        "description": "User's name",
-                                        "type": "string"
-                                    },
                                     "email": {
                                         "description": "Email",
                                         "type": "string"
