@@ -4,8 +4,9 @@ import Router from 'vue-router'
 // Containers
 import Full from '@/containers/Full'
 
-// Views
-import Dashboard from '@/views/sample/Dashboard'
+// Tools
+import Dashboard from '@/views/tools/Dashboard'
+import Users from '@/views/tools/Users'
 
 // Views - Pages
 import Page404 from '@/views/pages/Page404'
@@ -53,18 +54,22 @@ export default new Router({
   scrollBehavior : () => ({ y: 0 }),
   routes         : [
     {
-      path     : '/',
-      redirect : '/dashboard',
+      path     : '/admin',
+      redirect : '/admin/dashboard',
       name     : 'Home',
       component: Full,
+      beforeEnter: requireAuth,
       children : [
         {
           path     : 'dashboard',
           name     : 'Dashboard',
           component: Dashboard,
-          beforeEnter: requireAuth
         },
-        ...sample,
+        {
+          path     : 'users',
+          name     : 'Users',
+          component: Users,
+        },
       ],
     },
     {

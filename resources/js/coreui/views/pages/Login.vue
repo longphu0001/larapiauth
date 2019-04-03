@@ -140,9 +140,6 @@ export default {
 
     login (email, password) {
       var vueComponent = this;
-      // Reset validation
-      this.validation.message = '';
-      this.validation.errors = {};
       // Mark request status as loading
       this.request.status = 1
       // Get the access token

@@ -11,7 +11,7 @@
 |
 */
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 Route::get('/{vue_capture?}', 'AppController@index')
