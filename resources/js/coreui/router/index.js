@@ -101,30 +101,6 @@ export default new Router({
       beforeEnter: requireNonAuth
     },
     {
-      path     : '/pages',
-      redirect : '/pages/404',
-      name     : 'Pages',
-      component: { render (c) { return c('router-view') } },
-      children : [
-        {
-          path     : '404',
-          component: Page404,
-        },
-        {
-          path     : '500',
-          component: Page500,
-        },
-        {
-          path     : 'login',
-          component: Login,
-        },
-        {
-          path     : 'register',
-          component: Register,
-        },
-      ],
-    },
-    {
       path     : '*',
       name     : '404',
       component: Page404,
