@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000",
+            "url": "http://localhost:8000/",
             "description": "Local server"
         },
         {
@@ -35,11 +35,13 @@
                                     },
                                     "password": {
                                         "description": "Password",
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "password"
                                     },
                                     "password_confirmation": {
                                         "description": "Confirm password",
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "password"
                                     }
                                 },
                                 "type": "object"

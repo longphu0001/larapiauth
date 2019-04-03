@@ -12,6 +12,7 @@ use App\Notifications\PasswordChangeSuccess;
 use App\PasswordReset;
 use App\Http\AppResponse;
 use Validator;
+use App\Enums\RoleType;
 
 class AuthController extends Controller
 {
@@ -49,11 +50,13 @@ class AuthController extends Controller
     *                         property="password",
     *                         description="Password",
     *                         type="string",
+    *                         format="password"
     *                     ),
     *                     @OA\Property(
     *                         property="password_confirmation",
     *                         description="Confirm password",
     *                         type="string",
+    *                         format="password"
     *                     )
     *                 )
     *             )
@@ -79,6 +82,9 @@ class AuthController extends Controller
             'activation_token' => str_random(60)
         ]);
         $user->save();
+
+        // Default role:
+        $user->assignRole(RoleType::MEMBER);
 
         // Send email with activation link
         $user->notify(new RegisterActivate($user));
@@ -226,6 +232,8 @@ class AuthController extends Controller
     */
     public function getUser(Request $request)
     {
+        $result = $request->user();
+        $result['roles'] = $result->getRoleNames();
         return response()->json(['success' => AppResponse::STATUS_SUCCESS, 'data' => $request->user()], AppResponse::HTTP_OK);
     }
 
