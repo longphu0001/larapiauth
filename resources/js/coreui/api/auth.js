@@ -23,4 +23,26 @@ export default {
       email: email,
     });
   },
+
+  /*
+      GET /api/auth/password/token/find/:token
+      Find the reset password token
+  */
+  findPasswordResetToken: function(token) {
+    return axios.get(APP_CONFIG.API_URL + '/auth/password/token/find/' + token);
+  },
+
+  /*
+      POST /api/auth/password/reset
+      Reset password
+  */
+  resetPassword: function(email, password, password_confirmation, token) {
+    return axios.post(APP_CONFIG.API_URL + '/auth/password/reset',
+    {
+      email: email,
+      password: password,
+      password_confirmation: password_confirmation,
+      token: token
+    });
+  }
 }

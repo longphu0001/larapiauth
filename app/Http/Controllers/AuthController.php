@@ -65,7 +65,8 @@ class AuthController extends Controller
         // Validate input data
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string',
+            'password_confirmation' => 'required|string|same:password'
         ]);
         if ($validator->fails()) {
             return response()->json(['success' => AppResponse::STATUS_FAILURE, 'errors'=>$validator->errors()], AppResponse::HTTP_UNPROCESSABLE_ENTITY);
@@ -448,7 +449,8 @@ class AuthController extends Controller
         // Validate input data
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
-            'password' => 'required|string|confirmed',
+            'password' => 'required|string',
+            'password_confirmation' => 'required|string|same:password',
             'token' => 'required|string'
         ]);
         if ($validator->fails()) {

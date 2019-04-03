@@ -14,6 +14,7 @@ import Page500 from '@/views/pages/Page500'
 import Login from '@/views/pages/Login'
 import Register from '@/views/pages/Register'
 import ForgotPassword from '@/views/pages/ForgotPassword'
+import ResetPassword from '@/views/pages/ResetPassword'
 
 import store from '../store/index.js';
 import router from '../router';
@@ -99,6 +100,11 @@ export default new Router({
       name     : 'ForgotPassword',
       component: ForgotPassword,
       beforeEnter: requireNonAuth
+    },
+    {
+      path     : '/reset-password/:token',
+      name     : 'ResetPassword',
+      component: ResetPassword
     },
     {
       path     : '*',
