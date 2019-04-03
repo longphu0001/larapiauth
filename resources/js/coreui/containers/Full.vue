@@ -6,10 +6,6 @@
         :nav-items="nav"
         :fixed="fixedSidebar"
       />
-      <notifications
-        :style="{ 'margin-top': offset }"
-        class="custom-notifications"
-      />
       <main class="main">
         <breadcrumb :list="list" />
         <div class="container-fluid">
