@@ -9,15 +9,18 @@ import Dashboard from '@/views/tools/Dashboard'
 import Users from '@/views/tools/Users'
 
 // Views - Pages
+import Page403 from '@/views/pages/Page403'
 import Page404 from '@/views/pages/Page404'
 import Page500 from '@/views/pages/Page500'
 import Login from '@/views/pages/Login'
 import Register from '@/views/pages/Register'
 import ForgotPassword from '@/views/pages/ForgotPassword'
 import ResetPassword from '@/views/pages/ResetPassword'
+import UserInfo from '@/views/pages/UserInfo'
 
 import store from '../store/index.js';
 import router from '../router';
+import { AuthUtils } from '../mixins/auth-utils.js';
 
 /*
 This will check to see if the user is authenticated or not.
@@ -44,8 +47,21 @@ function requireNonAuth (to, from, next) {
   }
 }
 
-// Sample route
-import sample from './sample'
+function requireAdmin (to, from, next) {
+  if (window.localStorage.getItem('access_token')){
+    // Verify the stored access token
+    store.dispatch('user/getUser')
+    store.watch(store.getters['user/getUser'], n => {
+      if( store.get('user/userLoadStatus') == 2 && AuthUtils.methods.hasRole(store.get('user/user'), 'admin')){
+        next()
+      } else {
+        next('/403')
+      }
+    })
+  } else {
+    next('/login')
+  }
+}
 
 Vue.use(Router)
 
@@ -59,7 +75,7 @@ export default new Router({
       redirect : '/admin/dashboard',
       name     : 'Home',
       component: Full,
-      beforeEnter: requireAuth,
+      beforeEnter: requireAdmin,
       children : [
         {
           path     : 'dashboard',
@@ -77,6 +93,11 @@ export default new Router({
       path     : '/404',
       name     : 'Page404',
       component: Page404,
+    },
+    {
+      path     : '/403',
+      name     : 'Page403',
+      component: Page403,
     },
     {
       path     : '/500',
@@ -105,6 +126,12 @@ export default new Router({
       path     : '/reset-password/:token',
       name     : 'ResetPassword',
       component: ResetPassword
+    },
+    {
+      path     : '/userinfo',
+      name     : 'UserInfo',
+      component: UserInfo,
+      beforeEnter: requireAuth
     },
     {
       path     : '*',

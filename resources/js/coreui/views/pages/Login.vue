@@ -149,7 +149,7 @@ export default {
           // Store token into localStorage
           window.localStorage.setItem('access_token', response.data.data.access_token);
           // Move to dashboard
-          vueComponent.$router.push({ name: "Dashboard" })
+          vueComponent.$router.push({ name: "UserInfo" })
           // Mark request status as loaded succesully
           vueComponent.request.status = 2
         } else {
