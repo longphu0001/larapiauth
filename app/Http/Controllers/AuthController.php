@@ -205,7 +205,9 @@ class AuthController extends Controller
     */
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
+        // We delete the token completely instead of revoking it (invalidating it)
+        $request->user()->token()->delete();
+        //$request->user()->token()->revoke();
 
         return response()->json(['success' => AppResponse::STATUS_SUCCESS, 'message' => 'Successfully logged out'], AppResponse::HTTP_OK);
     }

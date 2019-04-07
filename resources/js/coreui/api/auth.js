@@ -44,5 +44,19 @@ export default {
       password_confirmation: password_confirmation,
       token: token
     });
-  }
+  },
+
+  /*
+      POST /api/auth/logout
+      Logout
+  */
+  logout: function() {
+    const instance = axios.create({
+      baseURL: APP_CONFIG.API_URL,
+      timeout: 1000,
+      headers: {'Authorization': 'Bearer ' + window.localStorage.getItem('access_token')}
+    });
+
+    return instance.get('/auth/logout');
+  },
 }

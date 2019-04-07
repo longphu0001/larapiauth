@@ -81,8 +81,22 @@ export default {
       window.location.href = "/"
     },
     logout () {
-      window.localStorage.removeItem("access_token");
-      window.location.href = "/"
+      AuthAPI.logout()
+        .then(response => {
+          debugger
+          if (response.data && response.data.success) {
+            // Clear token in localStorage
+            window.localStorage.removeItem("access_token");
+            window.location.href = "/"
+          } else {
+            // TODO: handle error
+            console.log(JSON.stringify(response))
+          }
+        })
+        .catch(function(error) {
+          // TODO: handle error
+          console.log(JSON.stringify(error))
+        })
     },
   },
   mixins:[
