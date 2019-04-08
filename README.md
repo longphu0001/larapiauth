@@ -37,6 +37,7 @@ You can go to http://larapiauth.rakuyomi.net/api/documentation to play with the 
 - Clone the .env.example file and rename it to .env
 - Config database information and mail server information in .env
 - Run "php artisan migrate" to generate DB schema
+- Run "php artisan db:seed" to seed db
 - Run "php artisan passport:install" to generate encryption key and oauth_clients table data
 - Run "php artisan key:generate" to generate application key
 - Run "sudo chmod -R 777 storage" (on mac or linux) or "chmod -R 777 storage" (on windows) to grant permission for the app to access/modify storage folder
