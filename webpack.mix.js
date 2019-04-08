@@ -65,7 +65,6 @@ mix.vueOptions({
 //  'vue',
 //  'vue-chartjs',
 //  'vue-loading-spinner',
-//  'vue-notification',
 //  'vue-router',
 //  'vue-sweetalert2',
 //  'vuejs-datepicker',

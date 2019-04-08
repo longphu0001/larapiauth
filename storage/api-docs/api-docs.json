@@ -29,21 +29,19 @@
                         "application/x-www-form-urlencoded": {
                             "schema": {
                                 "properties": {
-                                    "name": {
-                                        "description": "User's name",
-                                        "type": "string"
-                                    },
                                     "email": {
                                         "description": "Email",
                                         "type": "string"
                                     },
                                     "password": {
                                         "description": "Password",
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "password"
                                     },
                                     "password_confirmation": {
                                         "description": "Confirm password",
-                                        "type": "string"
+                                        "type": "string",
+                                        "format": "password"
                                     }
                                 },
                                 "type": "object"

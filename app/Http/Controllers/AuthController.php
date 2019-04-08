@@ -12,6 +12,7 @@ use App\Notifications\PasswordChangeSuccess;
 use App\PasswordReset;
 use App\Http\AppResponse;
 use Validator;
+use App\Enums\RoleType;
 
 class AuthController extends Controller
 {
@@ -40,11 +41,6 @@ class AuthController extends Controller
     *                 mediaType="application/x-www-form-urlencoded",
     *                 @OA\Schema(
     *                     type="object",
-    *                      @OA\Property(
-    *                         property="name",
-    *                         description="User's name",
-    *                         type="string",
-    *                     ),
     *                     @OA\Property(
     *                         property="email",
     *                         description="Email",
@@ -54,11 +50,13 @@ class AuthController extends Controller
     *                         property="password",
     *                         description="Password",
     *                         type="string",
+    *                         format="password"
     *                     ),
     *                     @OA\Property(
     *                         property="password_confirmation",
     *                         description="Confirm password",
     *                         type="string",
+    *                         format="password"
     *                     )
     *                 )
     *             )
@@ -69,9 +67,9 @@ class AuthController extends Controller
     {
         // Validate input data
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed'
+            'password' => 'required|string',
+            'password_confirmation' => 'required|string|same:password'
         ]);
         if ($validator->fails()) {
             return response()->json(['success' => AppResponse::STATUS_FAILURE, 'errors'=>$validator->errors()], AppResponse::HTTP_UNPROCESSABLE_ENTITY);
@@ -79,12 +77,14 @@ class AuthController extends Controller
 
         // Create user
         $user = new User([
-            'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
             'activation_token' => str_random(60)
         ]);
         $user->save();
+
+        // Default role:
+        $user->assignRole(RoleType::MEMBER);
 
         // Send email with activation link
         $user->notify(new RegisterActivate($user));
@@ -205,7 +205,9 @@ class AuthController extends Controller
     */
     public function logout(Request $request)
     {
-        $request->user()->token()->revoke();
+        // We delete the token completely instead of revoking it (invalidating it)
+        $request->user()->token()->delete();
+        //$request->user()->token()->revoke();
 
         return response()->json(['success' => AppResponse::STATUS_SUCCESS, 'message' => 'Successfully logged out'], AppResponse::HTTP_OK);
     }
@@ -232,6 +234,8 @@ class AuthController extends Controller
     */
     public function getUser(Request $request)
     {
+        $result = $request->user();
+        $result['roles'] = $result->getRoleNames();
         return response()->json(['success' => AppResponse::STATUS_SUCCESS, 'data' => $request->user()], AppResponse::HTTP_OK);
     }
 
@@ -455,7 +459,8 @@ class AuthController extends Controller
         // Validate input data
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email',
-            'password' => 'required|string|confirmed',
+            'password' => 'required|string',
+            'password_confirmation' => 'required|string|same:password',
             'token' => 'required|string'
         ]);
         if ($validator->fails()) {
