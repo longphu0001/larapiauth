@@ -1,5 +1,13 @@
 # larapiauth
-An authentication API boilerplate built from Laravel that can be used for starting any new app.
+An authentication API + CoreUI Admin panel boilerplate built from Laravel that can be used for starting any new app.
+
+# Demo
+Demo is here: http://larapiauth.rakuyomi.net/
+Admin account: admin@larapiauth.test / admin
+Member account: member@larapiauth.test / member
+
+Admin has the access to the panel, while normal member can only see his/her info.
+You can go to http://larapiauth.rakuyomi.net/api/documentation to play with the API.
 
 # Package versions
 - Laravel 5.8.3
@@ -25,6 +33,13 @@ An authentication API boilerplate built from Laravel that can be used for starti
 - Run "php artisan passport:install" to generate encryption key and oauth_clients table data
 - Run "php artisan key:generate" to generate application key
 - Run "sudo chmod -R 777 storage" (on mac or linux) or "chmod -R 777 storage" (on windows) to grant permission for the app to access/modify storage folder
+- Run "php artisan l5-swagger:generate" to generate API documentations
+- If you're deploying it to real server, copy everything inside vendor\swagger-api\swagger-ui\dist to public\docs\asset on your server. You need to create docs\asset if it's not existing.
+
+# Donation
+If this project help you reduce time to develop, you can give me a cup of coffee :)
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=7CXCQS83WU9EY)
 
 # Testing
 - Run "php artisan l5-swagger:generate" to generate API documentations
